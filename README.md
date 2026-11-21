@@ -1,83 +1,64 @@
-# 🎓 Student OS
+# Student OS
 
-A connected Notion workspace for students: one set of related databases, with dashboards built from filtered views of them.
+Student OS is a local student-life dashboard for organizing classes, assignments, attendance, notes, exams, tasks, projects, study sessions, habits, expenses, and grades. It runs on your computer and saves records in a local SQLite database.
 
-## Challenge problem
+## Features
 
-Students often track classes, assignment deadlines, notes, exams, and group work in separate places. That fragmentation adds mental load and makes important work easier to miss. Student OS gives learners one connected workspace with a deadline radar, weekly planning, and reusable profiles for high school, university, or self-learning.
+- 33 databases across academics, notes and resources, exams, productivity, personal life, finances, self-learning, collaboration, progress, and student resources.
+- Add, edit, and delete records; search and sort database entries.
+- Link related records, such as courses with assignments, exams, and study sessions.
+- Dashboard with upcoming deadlines and quick capture for tasks, notes, and study sessions.
+- Local persistence: your entries remain in the database between launches.
 
-It has 10 modules (Academic, Knowledge, Exams, Productivity, Personal, Finance, Self-Learning, Collaboration, Progress, Resources), 33 databases, 25 two-way relations, 23 rollups/formulas, sample data, and filtered database views for everyday student workflows.
+## Run on Windows
 
-## Two ways to use it
-
-|                                                  | `notion` (recommended) | `zip`                             |
-| ------------------------------------------------ | ---------------------- | --------------------------------- |
-| Creates pages and databases                      | ✅                     | ✅                                |
-| Property types, relations, rollups, formulas     | ✅ automatic           | Manual (guide included)           |
-| Filtered database views and home dashboard views | ✅ automatic           | Manual                            |
-| Sample data linked across databases              | ✅                     | ✅ (text, links after conversion) |
-| Needs a Notion integration token                 | Yes                    | No                                |
-
-The Notion API creates filtered database views and linked views on the home dashboard. Buttons and optional layouts such as boards or calendars can still be added in Notion; the generated **⚙️ Workspace Setup** page explains them.
-
-## Setup
+Install Python 3.10 or newer. From this project folder, either double-click `start.bat` or run:
 
 ```bash
-git clone <your-repo-url> student-os && cd student-os
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+py -m student_os web
 ```
 
-### Run the local dashboard
+Keep the terminal window open while using the app. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser. Stop the server with **Ctrl+C**.
 
-The project also includes a complete local dashboard. It works without a Notion token and stores its records in `student_os.sqlite3` in this project folder. The first launch loads the sample data from the schema; after that, your edits persist between runs.
+You can also run the command from Git Bash or PowerShell, as long as the terminal is in this folder. If `py` is not available, use:
 
 ```bash
 python -m student_os web
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000). Stop the server with `Ctrl+C`. To use another port, run `python -m student_os web --port 8080`.
+To use another port, add `--port`, for example `py -m student_os web --port 8080`.
 
-The dashboard includes all 33 databases, cross-database relation selectors, search, sorting, and create/edit/delete flows. SQLite data stays on your machine. To reset the local dashboard to the original sample data, stop it and remove `student_os.sqlite3`.
+## Run on macOS or Linux
 
-### Option A: Build directly in Notion
-
-1. Go to https://www.notion.so/profile/integrations → **New integration** (Internal). Enable Read, Update and Insert content. Copy the secret.
-2. In Notion, create an empty page, then open **•••** → **Connections** → add your integration.
-3. Copy `.env.example` to `.env` and fill in `NOTION_TOKEN` and `NOTION_PARENT_PAGE` (the page URL).
-4. Run:
+From this folder, run:
 
 ```bash
-python -m student_os notion
-# or: python -m student_os notion "https://www.notion.so/Student-OS-<page-id>"
+python3 -m student_os web
 ```
 
-The build can take several minutes because it creates the connected databases, sample records, formulas, and views through Notion's rate-limited API.
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000). Stop the server with **Ctrl+C**.
 
-### Option B: Notion-importable ZIP
+## Data and GitHub
 
-```bash
-python -m student_os zip          # writes dist/Student-OS-Notion-Template.zip
-```
+On first launch, Student OS creates `student_os.sqlite3` in this project folder and loads the sample records. New and edited records are saved there. The database is listed in `.gitignore`, so it is not uploaded to GitHub with the source code.
 
-In Notion, go to **Settings → Import → Text & Markdown** and upload the ZIP without unzipping it. Then follow the **⚙️ Workspace Setup** page to set property types, relations and rollups.
+## Project files
 
-## Project layout
-
-```
+```text
 student_os/
-  schema.py      # modules, databases, properties, sample rows, views, rollups/formulas
-  template.py    # renders the Markdown/CSV page tree + setup guide
-  export_zip.py  # writes the importable ZIP
-  notion.py      # Notion API builder
-  __main__.py    # CLI: zip | notion | validate
+  schema.py       Database definitions and sample records
+  web.py          Local web server and SQLite storage
+  web/
+    app.js        Dashboard interactions and entry forms
+    index.html    Dashboard page
+    styles.css    Dashboard styles
+start.bat         Windows launcher
+start.sh          macOS/Linux launcher
+requirements.txt  Python dependency list
 ```
 
-To customise the workspace, edit `schema.py`: add a database with `db(...)`, a relation with a `("relation", (target, synced_name))` column, or a computed property in `COMPUTED`. Run `python -m student_os validate` to check that sample relations and links resolve.
+To check the schema's sample relations and internal links, run:
 
-## Notes and limits
-
-- Status-like columns are created as **Select**, because the API can't create Notion's Status type. You can convert them in Notion if you prefer.
-- The Notion builder targets API version `2026-03-11` and uses data source IDs for schemas, relations, and database entries. It also creates core filtered views and linked dashboard views through the [Views API](https://developers.notion.com/guides/data-apis/working-with-views), following Notion's [API upgrade guide](https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03).
-- The API rejects formulas that read through relations and rollups of rollups, so progress uses a `Done Score` formula with an Average rollup, and GPA uses a `GPA Points` formula.
-- The builder sets the parent page's title to “Student OS” and appends content to it. Use an empty page.
+```bash
+py -m student_os validate
+```
