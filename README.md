@@ -10,13 +10,13 @@ It has 10 modules (Academic, Knowledge, Exams, Productivity, Personal, Finance, 
 
 ## Two ways to use it
 
-| | `notion` (recommended) | `zip` |
-|---|---|---|
-| Creates pages and databases | ✅ | ✅ |
-| Property types, relations, rollups, formulas | ✅ automatic | Manual (guide included) |
-| Filtered database views and home dashboard views | ✅ automatic | Manual |
-| Sample data linked across databases | ✅ | ✅ (text, links after conversion) |
-| Needs a Notion integration token | Yes | No |
+|                                                  | `notion` (recommended) | `zip`                             |
+| ------------------------------------------------ | ---------------------- | --------------------------------- |
+| Creates pages and databases                      | ✅                     | ✅                                |
+| Property types, relations, rollups, formulas     | ✅ automatic           | Manual (guide included)           |
+| Filtered database views and home dashboard views | ✅ automatic           | Manual                            |
+| Sample data linked across databases              | ✅                     | ✅ (text, links after conversion) |
+| Needs a Notion integration token                 | Yes                    | No                                |
 
 The Notion API creates filtered database views and linked views on the home dashboard. Buttons and optional layouts such as boards or calendars can still be added in Notion; the generated **⚙️ Workspace Setup** page explains them.
 
