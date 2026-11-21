@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+dist/
+.venv/
+student_os.sqlite3
+student_os.sqlite3-shm
+student_os.sqlite3-wal
